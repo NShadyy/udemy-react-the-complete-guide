@@ -48,15 +48,18 @@ const Login = (props) => {
     initialPasswordState
   );
 
+  const { isValid: isEmailValid, value: emailValue } = emailState;
+  const { isValid: isPasswordValid, value: passwordValue } = passwordState;
+
   useEffect(() => {
     const formValidationTimeout = setTimeout(() => {
-      setFormIsValid(emailState.isValid && passwordState.isValid);
+      setFormIsValid(isEmailValid && isPasswordValid);
     }, 500);
 
     return () => {
       clearTimeout(formValidationTimeout);
     };
-  }, [emailState, passwordState]);
+  }, [isEmailValid, isPasswordValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", value: event.target.value });
@@ -76,7 +79,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    props.onLogin(emailValue, passwordValue);
   };
 
   return (
@@ -84,14 +87,14 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ""
+            isEmailValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
             id="email"
-            value={emailState.value}
+            value={emailValue}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
@@ -99,14 +102,14 @@ const Login = (props) => {
 
         <div
           className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ""
+            isPasswordValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={passwordState.value}
+            value={passwordValue}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
